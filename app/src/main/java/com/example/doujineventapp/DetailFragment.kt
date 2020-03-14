@@ -43,6 +43,9 @@ class DetailFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // View取得
         val spaceView = view.findViewById<TextView>(R.id.spaceView)
         val circleNameView = view.findViewById<TextView>(R.id.circleNameView)
         val penNameView = view.findViewById<TextView>(R.id.penNameView)
@@ -50,6 +53,10 @@ class DetailFragment : Fragment() {
         val giftView = view.findViewById<TextView>(R.id.giftView)
         val noteView = view.findViewById<TextView>(R.id.noteView)
 
+        val editButton = view.findViewById<Button>(R.id.editButton)
+        val deleteButton = view.findViewById<Button>(R.id.deleteButton)
+
+        // データの表示
         spaceView.text = circle.space
         circleNameView.text = circle.circleName
         penNameView.text = circle.penName
@@ -57,12 +64,12 @@ class DetailFragment : Fragment() {
         giftView.text = if (circle.giftExists) "あり" else "なし"
         noteView.text = circle.note
 
-        val editButton = view.findViewById<Button>(R.id.editButton)
-        val deleteButton = view.findViewById<Button>(R.id.deleteButton)
-
+        // 編集ボタンでEdit画面へ
         editButton.setOnClickListener { view -> listener?.toEdit(position) }
 
+        // 削除ボタンで削除
         deleteButton.setOnClickListener { view ->
+            // 確認ダイアログ表示
             AlertDialog.Builder(context)
                 .setTitle("確認")
                 .setMessage("削除しますか？")

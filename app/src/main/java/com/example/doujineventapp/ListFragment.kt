@@ -44,6 +44,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // View取得
         val listView = view.findViewById<ListView>(R.id.listView)
         totalPriceLabel = view.findViewById(R.id.totalPriceLabel)
         val addButton =  view.findViewById<FloatingActionButton>(R.id.addButton)
@@ -57,19 +58,25 @@ class ListFragment : Fragment() {
         }
         totalPriceLabel.text = "合計金額：${totalPrice}円"
 
+        // itemsからlist用Adapterを作成
         val adapter = context ?.let {
             CircleListAdapter(it, items, object : CircleListAdapter.OnCheckedChangeListener{
+                // チェックボックス状態が変化したとき
                 override fun onCheckedChange(circle: Circle, isChecked: Boolean) {
+                    // 合計金額更新
                     updateTotalPrice(circle, isChecked)
+                    // データベース反映
                     listener?.onCheckBoxChanged(circle.id, isChecked)
                 }
             }) } ?: throw RuntimeException("Invalid context")
-
         listView.adapter = adapter
+
+        // リストアイテムが押されたらDetail画面へ
         listView.setOnItemClickListener{ parent, view, position, id ->
             listener?.toDetail(position)
         }
 
+        // 追加ボタンでAdd画面へ
         addButton.setOnClickListener{ listener?.toAdd() }
     }
 
@@ -87,13 +94,14 @@ class ListFragment : Fragment() {
         listener = null
     }
 
+    // 合計金額更新
     private fun updateTotalPrice(circle: Circle, isChecked: Boolean) {
         if (isChecked) {
             totalPrice -= circle.price
         } else {
             totalPrice += circle.price
         }
-        totalPriceLabel.text = "合計金額：" + totalPrice + "円"
+        totalPriceLabel.text = "合計金額：${totalPrice}円"
     }
 
     interface ListEventListener {

@@ -19,6 +19,8 @@ class AddFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val spaceView = view.findViewById<EditText>(R.id.spaceView)
         val circleNameView = view.findViewById<EditText>(R.id.circleNameView)
         val penNameView = view.findViewById<EditText>(R.id.penNameView)

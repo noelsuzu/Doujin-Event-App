@@ -42,6 +42,9 @@ class EditFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // View取得
         val spaceView = view.findViewById<EditText>(R.id.spaceView)
         val circleNameView = view.findViewById<EditText>(R.id.circleNameView)
         val penNameView = view.findViewById<EditText>(R.id.penNameView)
@@ -49,6 +52,10 @@ class EditFragment : Fragment() {
         val giftSwitch = view.findViewById<Switch>(R.id.giftSwitch)
         val noteView = view.findViewById<EditText>(R.id.noteView)
 
+        val saveButton = view.findViewById<Button>(R.id.button)
+        saveButton.text = getString(R.string.save) // ボタンに保存と表示
+
+        // 初期値設定
         spaceView.setText(circle.space)
         circleNameView.setText(circle.circleName)
         penNameView.setText(circle.penName)
@@ -56,20 +63,21 @@ class EditFragment : Fragment() {
         giftSwitch.isChecked = circle.giftExists
         noteView.setText(circle.note)
 
+        // Switchの状態を取得
         giftSwitch.setOnCheckedChangeListener{ buttonView, isChecked ->
             circle.giftExists = isChecked
         }
 
-        val saveButton = view.findViewById<Button>(R.id.button)
-        saveButton.text = getString(R.string.save)
-
+        // 保存ボタンで保存
         saveButton.setOnClickListener { view ->
+            // 新しいデータでcircleを更新
             circle.space = spaceView.text.toString()
             circle.circleName = circleNameView.text.toString()
             circle.penName = penNameView.text.toString()
             circle.price = priceView.text.toString().toInt()
             circle.note = noteView.text.toString()
 
+            //保存
             listener?.saveData(position, circle)
         }
     }

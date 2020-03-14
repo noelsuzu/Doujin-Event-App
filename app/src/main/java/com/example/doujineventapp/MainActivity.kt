@@ -13,17 +13,22 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // データベースを操作するアダプタ
         dbAdapter = DBAdapter(this)
+
+        // データ読み込み
         loadData()
 
+        // ListFragment表示
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, ListFragment.newInstance(items))
             .commit()
     }
 
+    // データベースを読み込みitemsに格納
     private fun loadData() {
         items.clear()
-        dbAdapter.openDB()
+        dbAdapter.readDB()
         val c = dbAdapter.getDB(null)
         if (c.moveToFirst()){
             do{
@@ -45,12 +50,16 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
         dbAdapter.closeDB()
     }
 
+    // ------  ListEventListener  ------
+
+    // データ一覧のチェックボックス状態をデータベースに反映
     override fun onCheckBoxChanged(position: Int, isChecked: Boolean) {
         dbAdapter.openDB()
         dbAdapter.updateDB(position, mapOf(DBAdapter.IS_CHECKED to isChecked))
         dbAdapter.closeDB()
     }
 
+    // DetailFragmentへ遷移
     override fun toDetail(position: Int) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, DetailFragment.newInstance(position, items[position]))
@@ -58,6 +67,17 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
             .commit()
     }
 
+    // AddFragmentへ遷移
+    override fun toAdd() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, AddFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    // ------  DetailEventListener  ------
+
+    // EditFragmentへ遷移
     override fun toEdit(position: Int) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, EditFragment.newInstance(position, items[position]))
@@ -65,6 +85,7 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
             .commit()
     }
 
+    // データ削除
     override fun deleteData(position: Int) {
         val circle = items.removeAt(position)
 
@@ -75,6 +96,9 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
         supportFragmentManager.popBackStack()
     }
 
+    // ------  EditEventListener  ------
+
+    // データ保存
     override fun saveData(position: Int, circle: Circle) {
         items[position] = circle
 
@@ -90,13 +114,9 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
         supportFragmentManager.popBackStack()
     }
 
-    override fun toAdd() {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, AddFragment())
-            .addToBackStack(null)
-            .commit()
-    }
+    // ------  AddEventListener  ------
 
+    // データ追加
     override fun addData(circle: Circle) {
         dbAdapter.openDB()
         val id = dbAdapter.registerDB(circle)

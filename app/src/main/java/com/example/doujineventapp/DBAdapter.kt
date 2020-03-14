@@ -34,8 +34,6 @@ class DBAdapter(val context: Context){
                 "$GIFT_EXISTS INTEGER, " +
                 "$NOTE TEXT, " +
                 "$IS_CHECKED INTEGER);"
-
-        private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 
     // DBの読み書き
@@ -151,8 +149,7 @@ class DBAdapter(val context: Context){
             db?.execSQL(SQL_CREATE_ENTRIES)
         }
 
-        override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        }
+        override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
     }
 
 
