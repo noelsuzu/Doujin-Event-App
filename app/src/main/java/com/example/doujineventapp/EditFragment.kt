@@ -1,27 +1,26 @@
 package com.example.doujineventapp
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Switch
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
-class DetailFragment : Fragment() {
-
+class EditFragment : Fragment() {
     private var position = -1
     private lateinit var circle: Circle
-    private var listener: DetailEventListener? = null
+    private var listener: EditEventListener? = null
 
     companion object {
         private const val POSITION = "position"
         private const val CIRCLE = "circle"
 
         fun newInstance(position: Int, circle: Circle) =
-            DetailFragment().apply {
+            EditFragment().apply {
                 arguments = Bundle().apply {
                     putInt(POSITION, position)
                     putSerializable(CIRCLE, circle)
@@ -39,7 +38,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        return inflater.inflate(R.layout.fragment_edit, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,34 +46,37 @@ class DetailFragment : Fragment() {
         val circleNameView = view.findViewById<TextView>(R.id.circleNameView)
         val penNameView = view.findViewById<TextView>(R.id.penNameView)
         val priceView = view.findViewById<TextView>(R.id.priceView)
-        val giftView = view.findViewById<TextView>(R.id.giftView)
+        val giftSwitch = view.findViewById<Switch>(R.id.giftSwitch)
         val noteView = view.findViewById<TextView>(R.id.noteView)
 
         spaceView.text = circle.space
         circleNameView.text = circle.circleName
         penNameView.text = circle.penName
-        priceView.text = "${circle.price}円"
-        giftView.text = if (circle.giftExists) "あり" else "なし"
+        priceView.text = circle.price.toString()
+        giftSwitch.isChecked = circle.giftExists
         noteView.text = circle.note
 
-        val editButton = view.findViewById<Button>(R.id.editButton)
-        val deleteButton = view.findViewById<Button>(R.id.deleteButton)
+        giftSwitch.setOnCheckedChangeListener{ buttonView, isChecked ->
+            circle.giftExists = isChecked
+        }
 
-        editButton.setOnClickListener { view -> listener?.toEdit(position) }
+        val saveButton = view.findViewById<Button>(R.id.button)
+        saveButton.text = getString(R.string.save)
 
-        deleteButton.setOnClickListener { view ->
-            AlertDialog.Builder(context)
-                .setTitle("確認")
-                .setMessage("削除しますか？")
-                .setPositiveButton("削除する"){ dialog, which -> listener?.deleteData(position) }
-                .setNegativeButton("キャンセル", null)
-                .show()
+        saveButton.setOnClickListener { view ->
+            circle.space = spaceView.text.toString()
+            circle.circleName = circleNameView.text.toString()
+            circle.penName = penNameView.text.toString()
+            circle.price = priceView.text.toString().toInt()
+            circle.note = noteView.text.toString()
+
+            listener?.saveData(position, circle)
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is DetailEventListener) {
+        if (context is EditEventListener) {
             listener = context
         } else {
             throw RuntimeException("Listener is not Implementation.")
@@ -86,8 +88,7 @@ class DetailFragment : Fragment() {
         listener = null
     }
 
-    interface DetailEventListener {
-        fun toEdit(position: Int)
-        fun deleteData(position: Int)
+    interface EditEventListener {
+        fun saveData(position: Int, circle: Circle)
     }
 }

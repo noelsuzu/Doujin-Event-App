@@ -3,7 +3,8 @@ package com.example.doujineventapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), ListFragment.ListEventListener, DetailFragment.DetailEventListener{
+class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
+        DetailFragment.DetailEventListener, EditFragment.EditEventListener{
 
     private lateinit var dbAdapter: DBAdapter
     private val items = arrayListOf<Circle>()
@@ -58,10 +59,10 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener, Detail
     }
 
     override fun toEdit(position: Int) {
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fragment_container, EditFragment.newInstance(position, items[position]))
-//            .addToBackStack(null)
-//            .commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, EditFragment.newInstance(position, items[position]))
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun deleteData(position: Int) {
@@ -71,6 +72,21 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener, Detail
         dbAdapter.selectDelete(circle.id)
         dbAdapter.closeDB()
 
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun saveData(position: Int, circle: Circle) {
+        items[position] = circle
+
+        dbAdapter.openDB()
+        dbAdapter.updateDB(circle.id, mapOf(
+            DBAdapter.CIRCLE_NAME to circle.circleName,
+            DBAdapter.PEN_NAME to circle.penName,
+            DBAdapter.SPACE to circle.space,
+            DBAdapter.GIFT_EXISTS to circle.giftExists,
+            DBAdapter.NOTE to circle.note
+        ))
+        dbAdapter.closeDB()
         supportFragmentManager.popBackStack()
     }
 }

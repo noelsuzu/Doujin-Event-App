@@ -9,4 +9,5 @@
     <string name="edit">編集</string>
     <string name="delete">削除</string>
     <string name="add">追加</string>
+    <string name="save">保存</string>
 </resources>
