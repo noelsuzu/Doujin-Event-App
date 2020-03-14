@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
-        DetailFragment.DetailEventListener, EditFragment.EditEventListener{
+        DetailFragment.DetailEventListener, EditFragment.EditEventListener, AddFragment.AddEventListener{
 
     private lateinit var dbAdapter: DBAdapter
     private val items = arrayListOf<Circle>()
@@ -87,6 +87,24 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener,
             DBAdapter.NOTE to circle.note
         ))
         dbAdapter.closeDB()
+        supportFragmentManager.popBackStack()
+    }
+
+    override fun toAdd() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, AddFragment())
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun addData(circle: Circle) {
+        dbAdapter.openDB()
+        val id = dbAdapter.registerDB(circle)
+        dbAdapter.closeDB()
+
+        circle.id = id
+        items.add(circle)
+
         supportFragmentManager.popBackStack()
     }
 }

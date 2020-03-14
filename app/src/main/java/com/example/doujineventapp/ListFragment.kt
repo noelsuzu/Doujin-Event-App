@@ -69,6 +69,8 @@ class ListFragment : Fragment() {
         listView.setOnItemClickListener{ parent, view, position, id ->
             listener?.toDetail(position)
         }
+
+        addButton.setOnClickListener{ listener?.toAdd() }
     }
 
     override fun onAttach(context: Context) {
@@ -97,6 +99,6 @@ class ListFragment : Fragment() {
     interface ListEventListener {
         fun onCheckBoxChanged(position: Int, isChecked: Boolean)
         fun toDetail(position: Int)
-//        fun toAdd()
+        fun toAdd()
     }
 }

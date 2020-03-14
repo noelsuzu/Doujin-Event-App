@@ -3,7 +3,7 @@ package com.example.doujineventapp
 import java.io.Serializable
 
 data class Circle  (
-    val id: Int,
+    var id: Int,
     var penName: String,
     var circleName: String,
     var space: String,

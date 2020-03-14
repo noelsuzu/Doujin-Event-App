@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Switch
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 class EditFragment : Fragment() {
@@ -42,19 +42,19 @@ class EditFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val spaceView = view.findViewById<TextView>(R.id.spaceView)
-        val circleNameView = view.findViewById<TextView>(R.id.circleNameView)
-        val penNameView = view.findViewById<TextView>(R.id.penNameView)
-        val priceView = view.findViewById<TextView>(R.id.priceView)
+        val spaceView = view.findViewById<EditText>(R.id.spaceView)
+        val circleNameView = view.findViewById<EditText>(R.id.circleNameView)
+        val penNameView = view.findViewById<EditText>(R.id.penNameView)
+        val priceView = view.findViewById<EditText>(R.id.priceView)
         val giftSwitch = view.findViewById<Switch>(R.id.giftSwitch)
-        val noteView = view.findViewById<TextView>(R.id.noteView)
+        val noteView = view.findViewById<EditText>(R.id.noteView)
 
-        spaceView.text = circle.space
-        circleNameView.text = circle.circleName
-        penNameView.text = circle.penName
-        priceView.text = circle.price.toString()
+        spaceView.setText(circle.space)
+        circleNameView.setText(circle.circleName)
+        penNameView.setText(circle.penName)
+        priceView.setText(circle.price.toString())
         giftSwitch.isChecked = circle.giftExists
-        noteView.text = circle.note
+        noteView.setText(circle.note)
 
         giftSwitch.setOnCheckedChangeListener{ buttonView, isChecked ->
             circle.giftExists = isChecked
