@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">同人イベント買い物リスト</string>
+    <string name="space_label">スペース</string>
+    <string name="circle_name_label">サークル名</string>
+    <string name="pen_name_label">サークル主</string>
+    <string name="price_label">購入予定金額</string>
+    <string name="gift_label">差し入れ</string>
+    <string name="note_label">備考</string>
+    <string name="edit">編集</string>
+    <string name="delete">削除</string>
+    <string name="add">追加</string>
 </resources>

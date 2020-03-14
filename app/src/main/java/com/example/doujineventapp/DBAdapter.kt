@@ -132,10 +132,10 @@ class DBAdapter(val context: Context){
     }
 
     // DB選択削除
-    fun selectDelete(position: String) {
+    fun selectDelete(position: Int) {
         db?.beginTransaction()
         try {
-            db?.delete(TABLE_NAME, "$ID=?", arrayOf(position))
+            db?.delete(TABLE_NAME, "$ID=?", arrayOf(position.toString()))
             db?.setTransactionSuccessful()
         } catch (e: Exception) {
             Log.i("selectDelete", e.message)

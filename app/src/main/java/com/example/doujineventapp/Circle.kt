@@ -1,6 +1,8 @@
 package com.example.doujineventapp
 
-data class Circle (
+import java.io.Serializable
+
+data class Circle  (
     val id: Int,
     var penName: String,
     var circleName: String,
@@ -9,4 +11,4 @@ data class Circle (
     var giftExists: Boolean,
     var note: String,
     var isChecked: Boolean
-)
+) : Serializable

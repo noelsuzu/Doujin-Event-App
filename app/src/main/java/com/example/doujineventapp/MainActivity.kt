@@ -1,10 +1,9 @@
 package com.example.doujineventapp
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), ListFragment.ListEventListener {
+class MainActivity : AppCompatActivity(), ListFragment.ListEventListener, DetailFragment.DetailEventListener{
 
     private lateinit var dbAdapter: DBAdapter
     private val items = arrayListOf<Circle>()
@@ -14,38 +13,6 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener {
         setContentView(R.layout.activity_main)
 
         dbAdapter = DBAdapter(this)
-
-        dbAdapter.openDB()
-
-//        val c = dbAdapter.searchDB(null, DBAdapter.ID, arrayOf("1"))
-//        Log.i("loadData","${c?.moveToFirst()}")
-
-//        dbAdapter.registerDB(Circle(0,"ユーザ1", "サークル1","あ01a",
-//            100, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ2", "サークル2","あ01b",
-            200, true, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ3", "サークル3","あ02a",
-            300, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ4", "サークル4","あ02b",
-            400, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ5", "サークル5","あ03a",
-            500, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ6", "サークル6","あ03b",
-            600, true, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ7", "サークル7","あ04a",
-            700, true, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ8", "サークル8","あ04b",
-            100, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ9", "サークル9","あ05a",
-            400, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ10", "サークル10","あ05b",
-            300, true, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ11", "サークル11","あ06a",
-            700, false, "特になし", false))
-        dbAdapter.registerDB(Circle(0,"ユーザ12", "サークル12","あ06b",
-            1000, false, "特になし", false))
-        dbAdapter.closeDB()
-
         loadData()
 
         supportFragmentManager.beginTransaction()
@@ -57,7 +24,6 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener {
         items.clear()
         dbAdapter.openDB()
         val c = dbAdapter.getDB(null)
-        Log.i("loadData", "${c.count}")
         if (c.moveToFirst()){
             do{
                 val circle = Circle(
@@ -82,5 +48,29 @@ class MainActivity : AppCompatActivity(), ListFragment.ListEventListener {
         dbAdapter.openDB()
         dbAdapter.updateDB(position, mapOf(DBAdapter.IS_CHECKED to isChecked))
         dbAdapter.closeDB()
+    }
+
+    override fun toDetail(position: Int) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, DetailFragment.newInstance(position, items[position]))
+            .addToBackStack(null)
+            .commit()
+    }
+
+    override fun toEdit(position: Int) {
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.fragment_container, EditFragment.newInstance(position, items[position]))
+//            .addToBackStack(null)
+//            .commit()
+    }
+
+    override fun deleteData(position: Int) {
+        val circle = items.removeAt(position)
+
+        dbAdapter.openDB()
+        dbAdapter.selectDelete(circle.id)
+        dbAdapter.closeDB()
+
+        supportFragmentManager.popBackStack()
     }
 }
